@@ -48,11 +48,17 @@ public class ModEntry
             return; 
         }
 
+        void ApplyChanges()
+        {
+            this.Helper.GameContent.InvalidateCache("Data\\Weapons");
+            this.Helper.WriteConfig(this.config);
+        }
+
         // register mod
         configMenu.Register(
             mod: this.ModManifest,
             reset: () => this.config = new ModConfig(),
-            save: () => this.Helper.WriteConfig(this.config)
+            save: () => ApplyChanges()
         );
         configMenu.AddBoolOption(
                 ModManifest,
@@ -80,17 +86,33 @@ public class ModEntry
     }
     private void AssetRequested(object sender, AssetRequestedEventArgs e)
     {
-        if (e.NameWithoutLocale.IsEquivalentTo("Data\\Weapons") && this.config.BuffAttack == true)
+        if (e.NameWithoutLocale.IsEquivalentTo("Data\\Weapons"))
         {
-            e.Edit(asset =>
+            if(this.config.BuffAttack == true)
             {
-                var data = asset.Data as Dictionary<string, WeaponData>;
-                if (data != null)
+                e.Edit(asset =>
                 {
-                    data["65"].MinDamage = 100;
-                    data["65"].MaxDamage = 120;
-                }
-            });
+                    var data = asset.Data as Dictionary<string, WeaponData>;
+                    if (data != null)
+                    {
+                        data["65"].MinDamage = 120;
+                        data["65"].MaxDamage = 120;
+                    }
+                });
+            }
+            else
+            {
+                e.Edit(asset =>
+                {
+                    var data = asset.Data as Dictionary<string, WeaponData>;
+                    if (data != null)
+                    {
+                        data["65"].MinDamage = 20;
+                        data["65"].MaxDamage = 20;
+                    }
+                });
+            }
+
         }
     }
 

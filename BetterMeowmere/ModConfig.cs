@@ -10,6 +10,6 @@ namespace BetterMeowmere
     {
         public bool LessAnnoyingProjectile { get; set; } = false;
         public bool ProjectileIsSecondaryAttack { get; set; } = true;
-        public bool BuffAttack { get; set; } = true;
+        public bool BuffAttack { get; set; } = false;
     }
 }
