@@ -20,6 +20,8 @@ public class ModEntry
         helper.Events.Input.ButtonPressed += this.OnButtonPressed;
         helper.Events.Content.AssetRequested += this.AssetRequested;
         helper.Events.GameLoop.GameLaunched += this.GameLaunched;
+        helper.Events.GameLoop.Saving += this.Saving;
+        helper.Events.GameLoop.DayStarted += this.DayStarted;
 
         try
         {
@@ -77,13 +79,56 @@ public class ModEntry
         configMenu.AddBoolOption(
                 ModManifest,
                 name: () => "Buff Attack",
-                tooltip: () => "Increase the damage of the meowmere blade (and projectile to a lesser extent).",
+                tooltip: () => "Increase the damage of the meowmere blade (and projectile to a lesser extent). Only change this if you're fully committed to having an overpowered sword!",
                 getValue: () => config.BuffAttack,
                 setValue: value => config.BuffAttack = value
             );
 
-
     }
+
+    private void ApplyDamageChanges(bool revert)
+    {
+        this.Helper.GameContent.InvalidateCache("Data\\Weapons");
+        var inventory = Game1.player.Items;
+        if (inventory != null)
+        {
+            foreach( var item in inventory)
+            {
+                if (item is MeleeWeapon && item.Name == "Meowmere")
+                {
+                    var meowmere = item as MeleeWeapon;
+                    if (meowmere != null && revert == true)
+                    {
+                        meowmere.minDamage.Value = 20;
+                        meowmere.maxDamage.Value = 20;
+                    }
+                    else if (meowmere != null && revert == false)
+                    {
+                        meowmere.minDamage.Value = 120;
+                        meowmere.maxDamage.Value = 120;
+                    }                    
+                }
+            }
+        }
+    }
+
+    private void Saving(object sender, SavingEventArgs e)
+    {
+        ApplyDamageChanges(true);
+    }
+
+    private void DayStarted(object sender, DayStartedEventArgs e)
+    {
+        if (config.BuffAttack == true)
+        {
+            ApplyDamageChanges(false);
+        }
+        else
+        {
+            ApplyDamageChanges(true);
+        }
+    }
+
     private void AssetRequested(object sender, AssetRequestedEventArgs e)
     {
         if (e.NameWithoutLocale.IsEquivalentTo("Data\\Weapons"))

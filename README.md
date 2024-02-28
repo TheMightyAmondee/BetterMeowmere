@@ -6,18 +6,32 @@ Better meowmere adds a rainbow cat projectile (altered to look a little more sta
 
 A few config options are also included to customise your meowmere experience. Listed below:
 
-- LessAnnoyingProjectile (default is false): If the meow sound effect gets too annoying, set this to true and the projectile will no longer meow when bouncing on walls.
+- LessAnnoyingProjectile (default is false): If the meow sound effect gets too annoying, set this to true and the projectile will no longer meow when bouncing on walls. It will still meow when launched and hitting monsters or disappearing.
 - ProjectileIsSecondaryAttack (default is true): Projectile is shot using the secondary attack, set this to false if you want the projectile to be shot using the primary attack instead (this would be more in line with how the weapon functions in Terraria)
-- BuffAttack (default is false): Makes the sword deal more damage. Set this to false for the sword to deal its' default damage (if you want the projectile without the buffing of the sword). This setting will only apply to newly acquired swords after setting to true and the buffed damage will remain applied to the sword even if the setting is set to false again.
+- BuffAttack (default is false): Set this to true to make the sword deal more damage (and make the sword Terraria level overpowered). 
+
+Changes to buff attack will only be applied to newly acquired meowmeres and to any meowmeres stored in the player inventory upon saving. Ensure the meowmere is in your inventory when saving if the BuffAttack setting is changed to ensure changes apply.
 
 Better Meowmere supports Generic Mod Config Menu to change the config settings in game.
 
- ### Installation: ###
+### Installation: ###
 
 1. Install SMAPI 4.0.0 or newer
 2. Download the mod
 3. Extract (unzip) the contents of the mod download into your Mods Folder.
 4. The config.json file will generate in the mod folder after the game has been run once with the mod installed.
+
+### Uninstalling: ###
+
+If you wish to reset the meowmere to it's default attack strength before uninstalling, a few special actions are needed. Otherwise, the mod can simply be removed from the Mods folder to uninstall!
+
+Failing to complete the special actions will result in a permanently buffed meowmere. Not game breaking, but probably not intended!
+
+To reset the meowmere damage:
+
+1. Set BuffAttack to false in the config.json or by using GMCM.
+2. Sleep for one night with the meowmere in your inventory.
+3. The sword should now have it's default attack. Remove the mod from your Mods folder to uninstall the mod.
 
 ### Compatibility: ###
 
