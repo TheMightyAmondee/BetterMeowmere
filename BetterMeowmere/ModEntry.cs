@@ -19,6 +19,7 @@ public class ModEntry
     {
         helper.Events.Input.ButtonPressed += this.OnButtonPressed;
         helper.Events.Content.AssetRequested += this.AssetRequested;
+        helper.Events.GameLoop.GameLaunched += this.GameLaunched;
 
         try
         {
@@ -31,6 +32,51 @@ public class ModEntry
         }
 
         MeowmereProjectile.Initialise(this.Helper);
+    }
+
+    private void GameLaunched(object sender, GameLaunchedEventArgs e) 
+    { 
+        this.BuildConfigMenu();
+    }
+
+    private void BuildConfigMenu()
+    {
+        // get Generic Mod Config Menu's API (if it's installed)
+        var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+        if (configMenu is null) 
+        { 
+            return; 
+        }
+
+        // register mod
+        configMenu.Register(
+            mod: this.ModManifest,
+            reset: () => this.config = new ModConfig(),
+            save: () => this.Helper.WriteConfig(this.config)
+        );
+        configMenu.AddBoolOption(
+                ModManifest,
+                name: () => "Less Annoying Projectile",
+                tooltip: () => "Tones down the 'meow' sound effects of the cat projectile.",
+                getValue: () => config.LessAnnoyingProjectile,
+                setValue: value => config.LessAnnoyingProjectile = value
+            );
+        configMenu.AddBoolOption(
+                ModManifest,
+                name: () => "Projectile Is Secondary Attack",
+                tooltip: () => "Shoot the cat projectile using the secondary attack (true) or the primary attack (false).",
+                getValue: () => config.ProjectileIsSecondaryAttack,
+                setValue: value => config.ProjectileIsSecondaryAttack = value
+            );
+        configMenu.AddBoolOption(
+                ModManifest,
+                name: () => "Buff Attack",
+                tooltip: () => "Increase the damage of the meowmere blade (and projectile to a lesser extent).",
+                getValue: () => config.BuffAttack,
+                setValue: value => config.BuffAttack = value
+            );
+
+
     }
     private void AssetRequested(object sender, AssetRequestedEventArgs e)
     {
