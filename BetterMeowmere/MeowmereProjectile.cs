@@ -148,7 +148,7 @@ namespace BetterMeowmere
 
             var angle = GetAngleForTexture(base.xVelocity.Value, base.yVelocity.Value);
 
-            float tail_scale = 1.65f * this.localScale;
+            float tail_scale = 1.67f * this.localScale;
 
             for (int i = base.tail.Count - 1; i >= 0; i--)
             {
