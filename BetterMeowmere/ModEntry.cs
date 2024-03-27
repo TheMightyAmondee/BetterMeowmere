@@ -7,6 +7,7 @@ using StardewValley.Tools;
 using StardewValley.GameData.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using xTile.Dimensions;
 
 namespace BetterMeowmere;
 
@@ -14,7 +15,7 @@ public class ModEntry
     : Mod
 {
     private ModConfig config;
-
+    private string[] AcceptedValues = { "All", "Some", "None" };
     public override void Entry(IModHelper helper)
     {
         helper.Events.Input.ButtonPressed += this.OnButtonPressed;
@@ -26,6 +27,10 @@ public class ModEntry
         try
         {
             this.config = helper.ReadConfig<ModConfig>();
+            if (AcceptedValues.Contains(this.config.ProjectileSound) == false)
+            {
+                this.config.ProjectileSound = "All";
+            }
         }
         catch
         {
@@ -33,7 +38,7 @@ public class ModEntry
             this.Monitor.Log("Failed to parse config file, default options will be used.", LogLevel.Warn);
         }
 
-        MeowmereProjectile.Initialise(this.Helper);
+        MeowmereProjectile.Initialise(this.Helper, this.config);
     }
 
     private void GameLaunched(object sender, GameLaunchedEventArgs e) 
@@ -62,12 +67,13 @@ public class ModEntry
             reset: () => this.config = new ModConfig(),
             save: () => ApplyChanges()
         );
-        configMenu.AddBoolOption(
+        configMenu.AddTextOption(
                 ModManifest,
-                name: () => "Less Annoying Projectile",
-                tooltip: () => "Tones down the 'meow' sound effects of the cat projectile.",
-                getValue: () => config.LessAnnoyingProjectile,
-                setValue: value => config.LessAnnoyingProjectile = value
+                name: () => "Projectile Sounds",
+                tooltip: () => "\"None\" No sounds.\n\"Some\" No sound when bouncing off walls.\n\"All\" Meow!",
+                allowedValues: AcceptedValues,
+                getValue: () => config.ProjectileSound,
+                setValue: value => config.ProjectileSound = value
             );
         configMenu.AddBoolOption(
                 ModManifest,
@@ -166,10 +172,13 @@ public class ModEntry
         int bounces = 4;
         Random random = new Random();
         var soundtoplay = "terraria_meowmere";
-        Game1.currentLocation.playSound(soundtoplay);
+        if (config.ProjectileSound != "None")
+        {
+            Game1.currentLocation.playSound(soundtoplay);
+        }        
         string bouncesound = soundtoplay;
 
-        if (this.config.LessAnnoyingProjectile == true)
+        if (this.config.ProjectileSound != "All")
         {
             bouncesound = "";
         }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BetterMeowmere
 {
-    internal class ModConfig
+    public class ModConfig
     {
-        public bool LessAnnoyingProjectile { get; set; } = false;
+        public string ProjectileSound { get; set; } = "All";
         public bool ProjectileIsSecondaryAttack { get; set; } = true;
         public bool BuffAttack { get; set; } = false;
     }

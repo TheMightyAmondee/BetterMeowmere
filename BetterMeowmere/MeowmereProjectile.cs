@@ -20,16 +20,17 @@ namespace BetterMeowmere
         private static IModHelper helper;
         public static Texture2D projectile;
         public static Texture2D tail;
+        private static ModConfig config;
 
         public delegate void onCollisionBehavior(GameLocation location, int xPosition, int yPosition, Character who);
         public readonly NetInt damage = new NetInt();
         public NetInt debuff = new NetInt(-1);
-
-        public static void Initialise(IModHelper modhelper)
+        public static void Initialise(IModHelper modhelper, ModConfig config)
         {
             MeowmereProjectile.helper = modhelper;
             projectile = modhelper.ModContent.Load<Texture2D>(PathUtilities.NormalizePath("assets/meowmereprojectile.png"));
             tail = modhelper.ModContent.Load<Texture2D>(PathUtilities.NormalizePath("assets/meowmeretail.png"));
+            MeowmereProjectile.config = config;
         }
         public MeowmereProjectile()
         { }
@@ -57,27 +58,35 @@ namespace BetterMeowmere
 
         public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer player)
         {
-            location.playSound("terraria_meowmere");
             this.explosionAnimation(location);
         }
 
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
-            location.playSound("terraria_meowmere");
+            if(config.ProjectileSound != "None")
+            {
+                location.playSound("terraria_meowmere");
+            }           
             this.explosionAnimation(location);
             base.piercesLeft.Value--;
         }
 
         public override void behaviorOnCollisionWithOther(GameLocation location)
         {
-            location.playSound("terraria_meowmere");
+            if (config.ProjectileSound != "None")
+            {
+                location.playSound("terraria_meowmere");
+            }
             this.explosionAnimation(location);
             base.piercesLeft.Value--;
         }
 
         public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
         {
-            location.playSound("terraria_meowmere");
+            if (config.ProjectileSound != "None")
+            {
+                location.playSound("terraria_meowmere");
+            }
             this.explosionAnimation(location);
             if (n is Monster)
             {
@@ -90,7 +99,7 @@ namespace BetterMeowmere
         {
             Multiplayer multiplayer = helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue();
 
-            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\Animations", new Rectangle(192, 320, 64, 64), 60, 5, 1, base.position.Value, flicker: false, flipped: false));
+            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\Animations", new Rectangle(192, 320, 64, 64), 60, 5, 1, base.position.Value, flicker: false, flipped: false));      
             base.destroyMe = true;
             this.destroyMe = true;
         }
@@ -176,6 +185,15 @@ namespace BetterMeowmere
 
             return spriteffect;
         }
+
+        //public override Rectangle getBoundingBox()
+        //{
+        //    Vector2 pos = this.position.Value;
+        //    int damageSize = (int)this.boundingBoxWidth.Value + (this.damagesMonsters.Value ? 8 : 0);
+        //    float current_scale = this.localScale * 1.5f;
+        //    damageSize = (int)((float)damageSize * current_scale);
+        //    return new Rectangle((int)pos.X + 32 - damageSize / 2, (int)pos.Y + 32 - damageSize / 2, damageSize, damageSize);
+        //}
     }
 }
 
