@@ -6,7 +6,7 @@ Better meowmere adds a rainbow cat projectile (altered to look a little more sta
 
 A few config options are also included to customise your meowmere experience. Listed below:
 
-- LessAnnoyingProjectile (default is false): If the meow sound effect gets too annoying, set this to true and the projectile will no longer meow when bouncing on walls. It will still meow when launched and hitting monsters or disappearing.
+- ProjectileSounds (default is All): All: all sound effects, Some: no sound effects when bouncing off walls, None: No sound effects.
 - ProjectileIsSecondaryAttack (default is true): Projectile is shot using the secondary attack, set this to false if you want the projectile to be shot using the primary attack instead (this would be more in line with how the weapon functions in Terraria)
 - BuffAttack (default is false): Set this to true to make the sword deal more damage (and make the sword Terraria level overpowered). 
 
