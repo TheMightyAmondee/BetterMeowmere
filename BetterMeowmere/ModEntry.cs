@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using xTile.Dimensions;
 using StardewValley.Projectiles;
+using StardewValley.Enchantments;
 
 namespace BetterMeowmere;
 
@@ -93,7 +94,7 @@ public class ModEntry
             );
     }
 
-    private void ApplyDamageChanges(bool revert)
+    private void ApplyDamageChanges()
     {
         this.Helper.GameContent.InvalidateCache("Data\\Weapons");
         var inventory = Game1.player.Items;
@@ -104,15 +105,24 @@ public class ModEntry
                 if (item is MeleeWeapon && item.Name == "Meowmere")
                 {
                     var meowmere = item as MeleeWeapon;
-                    if (meowmere != null && revert == true)
+                    if ( meowmere != null)
                     {
-                        meowmere.minDamage.Value = 20;
-                        meowmere.maxDamage.Value = 20;
-                    }
-                    else if (meowmere != null && revert == false)
-                    {
-                        meowmere.minDamage.Value = this.config.AttackDamage;
-                        meowmere.maxDamage.Value = this.config.AttackDamage;
+                        foreach (BaseEnchantment enchantment2 in meowmere.enchantments)
+                        {
+                            if (enchantment2.IsForge())
+                            {
+                                enchantment2.UnapplyTo(meowmere);
+                            }
+                        }
+                        meowmere.minDamage.Value = config.AttackDamage;
+                        meowmere.maxDamage.Value = config.AttackDamage;
+                        foreach (BaseEnchantment enchantment in meowmere.enchantments)
+                        {
+                            if (enchantment.IsForge())
+                            {
+                                enchantment.ApplyTo(meowmere);
+                            }
+                        }
                     }                    
                 }
             }
@@ -121,19 +131,12 @@ public class ModEntry
 
     private void Saving(object sender, SavingEventArgs e)
     {
-        ApplyDamageChanges(true);
+        ApplyDamageChanges();
     }
 
     private void DayStarted(object sender, DayStartedEventArgs e)
     {
-        if (config.AttackDamage != 20)
-        {
-            ApplyDamageChanges(false);
-        }
-        else
-        {
-            ApplyDamageChanges(true);
-        }
+        ApplyDamageChanges();
     }
 
     private void AssetRequested(object sender, AssetRequestedEventArgs e)
