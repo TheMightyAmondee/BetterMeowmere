@@ -6,6 +6,7 @@ Better meowmere adds a rainbow cat projectile (altered to look a little more sta
 
 A few config options are also included to customise your meowmere experience. Listed below:
 
+- (1.0.2) HasProjectile (default is true): Whether the cat projectile is enabled.
 - ProjectileSounds (default is All): All: all sound effects, Some: no sound effects when bouncing off walls, None: No sound effects.
 - ProjectileIsSecondaryAttack (default is true): Projectile is shot using the secondary attack, set this to false if you want the projectile to be shot using the primary attack instead (this would be more in line with how the weapon functions in Terraria)
 - AttackDamage (default is 20): The average attack damage of the meowmere blade. Projectiles will do about half this damage. Make the sword Terraria level overpowered!
@@ -39,4 +40,7 @@ Should be fully compatible with multiplayer although this has not been tested. L
 
 ### Version History: ###
 1.0.0 - initial release
+
 1.0.1 - Improved collision, adjustable attack damage, bug fixes
+
+1.02 - Allow the cat projectile to be enabled and disabled
