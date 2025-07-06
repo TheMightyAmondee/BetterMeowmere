@@ -69,6 +69,13 @@ public class ModEntry
             reset: () => this.config = new ModConfig(),
             save: () => ApplyChanges()
         );
+        configMenu.AddBoolOption(
+                ModManifest,
+                name: () => "Has Projectile",
+                tooltip: () => "Whether the cat projectile is enabled (true) or not (false).",
+                getValue: () => config.HasProjectile,
+                setValue: value => config.HasProjectile = value
+            );
         configMenu.AddTextOption(
                 ModManifest,
                 name: () => "Projectile Sounds",
@@ -205,7 +212,8 @@ public class ModEntry
                     && Game1.fadeToBlack == false
                     && Game1.player.swimming.Value == false
                     && Game1.player.bathingClothes.Value == false
-                    && Game1.player.onBridge.Value == false;
+                    && Game1.player.onBridge.Value == false
+                    && config.HasProjectile == true;
 
         var user = Game1.player;
         if (user.CurrentTool?.Name != "Meowmere")
